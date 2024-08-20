@@ -10,6 +10,7 @@ import (
 	"go/token"
 	"html/template"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -77,6 +78,7 @@ func main() {
 		panic(err)
 	}
 	filepath := "example/example.go"
+	outFileName := "example/example_dd.go"
 
 	rawFile, err := os.ReadFile(filepath)
 	if err != nil {
@@ -144,5 +146,19 @@ func main() {
 		})
 	}
 
-	fmt.Println(templates.ExecuteTemplate(os.Stdout, "dd.tmpl", templateValues))
+	outFile, err := os.OpenFile(outFileName, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+	err = templates.ExecuteTemplate(outFile, "dd.tmpl", templateValues)
+	if err != nil {
+		panic(err)
+	}
+
+	// run go imports
+	err = exec.Command("goimports", "-w", outFileName).Run()
+	if err != nil {
+		panic(err)
+	}
+
 }

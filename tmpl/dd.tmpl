@@ -9,7 +9,7 @@ type {{ $wrapperName }} struct {
     inner {{ $interface.Name }}
 }
 
-func NewDD{{ $interface.Name }}Wrapper(inner {{ $interface.Name }}) *{{ $wrapperName }}, serviceName, operationName, string) {
+func NewDD{{ $interface.Name }}Wrapper(inner {{ $interface.Name }}, serviceName, operationName string) *{{ $wrapperName }}{
     return &{{ $wrapperName }}{
         serviceName: serviceName,
         operationName: operationName,
