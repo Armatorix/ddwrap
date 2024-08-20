@@ -1,0 +1,38 @@
+package {{ .PackageName }}
+{{ range $interface := .Interfaces }}
+
+{{ $wrapperName := printf "dd%sWrapper" $interface.Name }}
+
+type {{ $wrapperName }} struct {
+    serviceName string
+    operationName string
+    inner {{ $interface.Name }}
+}
+
+func NewDD{{ $interface.Name }}Wrapper(inner {{ $interface.Name }}) *{{ $wrapperName }}, serviceName, operationName, string) {
+    return &{{ $wrapperName }}{
+        serviceName: serviceName,
+        operationName: operationName,
+        inner: inner,
+    }
+}
+func (w *{{ $wrapperName }}) startSpan(ctx context.Context, resourceName string) (tracer.Span, context.Context)  {
+    return tracer.StartSpanFromContext(
+        ctx,
+        w.operationName,
+        tracer.ServiceName(openaiServiceName),
+        tracer.ResourceName(resourceName),
+    )
+}
+
+
+{{ range $method := $interface.Methods }}
+func (w *{{ $wrapperName }}) {{ .Name }} ({{ methodArgs $method }}) ({{ methodRetsTypesOnly $method }}) {
+    span, {{ contextArgNameOnly $method }} := w.startSpan({{ contextArg $method }},"{{ .Name }}")
+    defer span.Finish()
+    {{ methodRetsNamesOnly $method }} := w.inner.{{ .Name }}({{ methodArgsNamesOnly $method }})
+    return {{ methodRetsNamesOnly $method }}
+}
+{{ end }}
+
+{{ end }}
