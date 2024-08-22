@@ -1,4 +1,6 @@
-package test_package_name
+// DO NOT EDIT: auto generated from ddwrap
+
+package example
 
 import (
 	"context"
@@ -23,7 +25,7 @@ func (w *ddExampleWrapper) startSpan(ctx context.Context, resourceName string) (
 	return tracer.StartSpanFromContext(
 		ctx,
 		w.operationName,
-		tracer.ServiceName(openaiServiceName),
+		tracer.ServiceName(w.serviceName),
 		tracer.ResourceName(resourceName),
 	)
 }
@@ -38,7 +40,7 @@ func (w *ddExampleWrapper) Hello() string {
 func (w *ddExampleWrapper) HelloListArg(in0 []string, in1 ...string) string {
 	span, _ := w.startSpan(context.Background(), "HelloListArg")
 	defer span.Finish()
-	out0 := w.inner.HelloListArg(in0, in1)
+	out0 := w.inner.HelloListArg(in0, in1...)
 	return out0
 }
 
@@ -73,7 +75,7 @@ func (w *ddExample2Wrapper) startSpan(ctx context.Context, resourceName string) 
 	return tracer.StartSpanFromContext(
 		ctx,
 		w.operationName,
-		tracer.ServiceName(openaiServiceName),
+		tracer.ServiceName(w.serviceName),
 		tracer.ResourceName(resourceName),
 	)
 }

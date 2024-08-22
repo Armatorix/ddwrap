@@ -1,3 +1,5 @@
+// DO NOT EDIT: auto generated from ddwrap
+
 package {{ .PackageName }}
 {{ range $interface := .Interfaces }}
 
@@ -20,7 +22,7 @@ func (w *{{ $wrapperName }}) startSpan(ctx context.Context, resourceName string)
     return tracer.StartSpanFromContext(
         ctx,
         w.operationName,
-        tracer.ServiceName(openaiServiceName),
+        tracer.ServiceName(w.serviceName),
         tracer.ResourceName(resourceName),
     )
 }

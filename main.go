@@ -59,6 +59,9 @@ func main() {
 				vals := make([]string, 0)
 				for i := range m.Args {
 					vals = append(vals, fmt.Sprintf("in%d", i))
+					if strings.HasPrefix(m.Args[i], "...") {
+						vals[i] = vals[i] + "..."
+					}
 				}
 				return strings.Join(vals, ", ")
 			},
@@ -92,7 +95,7 @@ func main() {
 	}
 
 	templateValues := TemplateValues{
-		PackageName: "test_package_name",
+		PackageName: "example",
 		Interfaces:  make([]Interface, 0),
 	}
 
