@@ -12,6 +12,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/alexflint/go-arg"
 )
 
 type Method struct {
@@ -33,9 +35,19 @@ type TemplateValues struct {
 //go:embed tmpl/*
 var tmpls embed.FS
 
+type cmdArgs struct {
+	Input  string   `arg:"positional"`
+	Output []string `arg:"positional"`
+}
+
 func main() {
-	dir, err := os.Getwd()
-	fmt.Println("os file", dir)
+	args := cmdArgs{}
+	arg.MustParse(&args)
+
+	mainFn()
+}
+
+func mainFn() {
 	templates, err := template.New("").
 		Funcs(template.FuncMap{
 			"contextArg": func(m Method) string {
