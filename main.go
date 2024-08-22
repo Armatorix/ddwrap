@@ -34,6 +34,8 @@ type TemplateValues struct {
 var tmpls embed.FS
 
 func main() {
+	dir, err := os.Getwd()
+	fmt.Println("os file", dir)
 	templates, err := template.New("").
 		Funcs(template.FuncMap{
 			"contextArg": func(m Method) string {

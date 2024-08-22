@@ -1,3 +1,4 @@
+//go:generate go run github.com/Armatorix/ddwrap example.go
 package example
 
 import "context"
