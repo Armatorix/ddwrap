@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/alexflint/go-arg"
+	arg "github.com/alexflint/go-arg"
 	"golang.org/x/tools/imports"
 )
 
@@ -36,18 +36,20 @@ type TemplateValues struct {
 var tmpls embed.FS
 
 type cmdArgs struct {
-	Input  string   `arg:"positional"`
-	Output []string `arg:"positional"`
+	Input  string `arg:"positional"`
+	Output string `arg:"positional"`
 }
 
 func main() {
 	args := cmdArgs{}
-	arg.MustParse(&args)
-
-	mainFn()
+	err := arg.Parse(&args)
+	if err != nil {
+		panic(err)
+	}
+	mainFn(args.Input, args.Output)
 }
 
-func mainFn() {
+func mainFn(inputFilepath, outputFilepath string) {
 	templates, err := template.New("").
 		Funcs(template.FuncMap{
 			"contextArg": func(m Method) string {
@@ -94,10 +96,8 @@ func mainFn() {
 	if err != nil {
 		panic(err)
 	}
-	filepath := "example/example.go"
-	outFileName := "example/example_dd.go"
 
-	rawFile, err := os.ReadFile(filepath)
+	rawFile, err := os.ReadFile(inputFilepath)
 	if err != nil {
 		panic(err)
 	}
@@ -163,7 +163,7 @@ func mainFn() {
 		})
 	}
 
-	outFile, err := os.OpenFile(outFileName, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	outFile, err := os.OpenFile(outputFilepath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -176,7 +176,7 @@ func mainFn() {
 		panic(err)
 	}
 
-	ddWithImports, err := imports.Process(outFileName, nil, &imports.Options{
+	ddWithImports, err := imports.Process(outputFilepath, nil, &imports.Options{
 		Fragment:   false,
 		AllErrors:  true,
 		Comments:   true,
@@ -188,7 +188,7 @@ func mainFn() {
 		panic(err)
 	}
 
-	err = os.WriteFile(outFileName, ddWithImports, 0644)
+	err = os.WriteFile(outputFilepath, ddWithImports, 0644)
 	if err != nil {
 		panic(err)
 	}
