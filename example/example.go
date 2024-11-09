@@ -1,5 +1,5 @@
-//go:generate go run github.com/Armatorix/ddwrap example.go internal_gen.go
-//go:generate go run github.com/Armatorix/ddwrap - example.go out/external_gen.go
+//go:generate go run github.com/Armatorix/ddwrap -p example example.go internal_gen.go
+//go:generate go run github.com/Armatorix/ddwrap -p externalexample example.go externalexample/external_gen.go
 package example
 
 import (

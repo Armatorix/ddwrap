@@ -38,7 +38,7 @@ var tmpls embed.FS
 type cmdArgs struct {
 	Input         string `arg:"positional,required"`
 	Output        string `arg:"positional,required"`
-	OutputPackage int    `arg:"-p,required" help:"Output package name"`
+	OutputPackage string `arg:"-p,required" help:"Output package name"`
 }
 
 func main() {
@@ -110,7 +110,7 @@ func mainFn(args cmdArgs) {
 	}
 
 	templateValues := TemplateValues{
-		PackageName: args.Output,
+		PackageName: args.OutputPackage,
 		Interfaces:  make([]Interface, 0),
 	}
 
