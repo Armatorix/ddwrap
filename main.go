@@ -36,8 +36,9 @@ type TemplateValues struct {
 var tmpls embed.FS
 
 type cmdArgs struct {
-	Input  string `arg:"positional"`
-	Output string `arg:"positional"`
+	Input         string `arg:"positional,required"`
+	Output        string `arg:"positional,required"`
+	OutputPackage int    `arg:"-p,required" help:"Output package name"`
 }
 
 func main() {
@@ -46,10 +47,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	mainFn(args.Input, args.Output)
+	mainFn(args)
 }
 
-func mainFn(inputFilepath, outputFilepath string) {
+func mainFn(args cmdArgs) {
 	templates, err := template.New("").
 		Funcs(template.FuncMap{
 			"contextArg": func(m Method) string {
@@ -97,19 +98,19 @@ func mainFn(inputFilepath, outputFilepath string) {
 		panic(err)
 	}
 
-	rawFile, err := os.ReadFile(inputFilepath)
+	rawFile, err := os.ReadFile(args.Input)
 	if err != nil {
 		panic(err)
 	}
 	fset := token.NewFileSet()
 
-	node, err := parser.ParseFile(fset, "example/example.go", nil, parser.ParseComments)
+	node, err := parser.ParseFile(fset, args.Input, nil, parser.ParseComments)
 	if err != nil {
 		panic(err)
 	}
 
 	templateValues := TemplateValues{
-		PackageName: "example",
+		PackageName: args.Output,
 		Interfaces:  make([]Interface, 0),
 	}
 
@@ -163,7 +164,7 @@ func mainFn(inputFilepath, outputFilepath string) {
 		})
 	}
 
-	outFile, err := os.OpenFile(outputFilepath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	outFile, err := os.OpenFile(args.Output, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -176,7 +177,7 @@ func mainFn(inputFilepath, outputFilepath string) {
 		panic(err)
 	}
 
-	ddWithImports, err := imports.Process(outputFilepath, nil, &imports.Options{
+	ddWithImports, err := imports.Process(args.Output, nil, &imports.Options{
 		Fragment:   false,
 		AllErrors:  true,
 		Comments:   true,
@@ -188,7 +189,7 @@ func mainFn(inputFilepath, outputFilepath string) {
 		panic(err)
 	}
 
-	err = os.WriteFile(outputFilepath, ddWithImports, 0644)
+	err = os.WriteFile(args.Output, ddWithImports, 0644)
 	if err != nil {
 		panic(err)
 	}
