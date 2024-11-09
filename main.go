@@ -10,10 +10,10 @@ import (
 	"go/token"
 	"html/template"
 	"os"
-	"os/exec"
 	"strings"
 
 	"github.com/alexflint/go-arg"
+	"golang.org/x/tools/imports"
 )
 
 type Method struct {
@@ -171,11 +171,25 @@ func mainFn() {
 	if err != nil {
 		panic(err)
 	}
-
-	// run go imports
-	err = exec.Command("goimports", "-w", outFileName).Run()
+	err = outFile.Close()
 	if err != nil {
 		panic(err)
 	}
 
+	ddWithImports, err := imports.Process(outFileName, nil, &imports.Options{
+		Fragment:   false,
+		AllErrors:  true,
+		Comments:   true,
+		TabIndent:  true,
+		TabWidth:   8,
+		FormatOnly: false,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.WriteFile(outFileName, ddWithImports, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
