@@ -1,5 +1,5 @@
-github.com/Armatorix/ddwrap v0.0.0-20241109222354-a68ed402487b h1:8KlIO7TJ8sbwmffeS5eCqbNh3CRyBVg4n7/eUp91XlA=
-github.com/Armatorix/ddwrap v0.0.0-20241109222354-a68ed402487b/go.mod h1:rQpVY2UDSMxIMjpGm68oqdGAyzU7j+zHbA9nLpuNZrw=
+github.com/Armatorix/ddwrap v0.0.0 h1:9sgPjkeK5mPsMVLpzmOlMl3CLkukmF4NwixgoS4Yzb8=
+github.com/Armatorix/ddwrap v0.0.0/go.mod h1:rQpVY2UDSMxIMjpGm68oqdGAyzU7j+zHbA9nLpuNZrw=
 github.com/DataDog/appsec-internal-go v1.9.0 h1:cGOneFsg0JTRzWl5U2+og5dbtyW3N8XaYwc5nXe39Vw=
 github.com/DataDog/appsec-internal-go v1.9.0/go.mod h1:wW0cRfWBo4C044jHGwYiyh5moQV2x0AhnwqMuiX7O/g=
 github.com/DataDog/datadog-agent/pkg/obfuscate v0.59.0 h1:uX6/XoKMS7KYXe+R+vwgw+eRdmn16xfa9PDF5dxgumE=

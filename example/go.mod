@@ -3,7 +3,7 @@ module example
 go 1.23.0
 
 require (
-	github.com/Armatorix/ddwrap v0.0.1
+	github.com/Armatorix/ddwrap v0.0.0
 	gopkg.in/DataDog/dd-trace-go.v1 v1.69.1
 )
 
